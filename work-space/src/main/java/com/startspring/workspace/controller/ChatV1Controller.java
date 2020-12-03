@@ -13,7 +13,7 @@ public class ChatV1Controller {
     private List<String> messages = new ArrayList<>();
 
 //    @PostConstruct
-//    public void init() {
+//    public void init() {g
 //        messages.add("Hej");
 //        messages.add("Czesc!");
 //        messages.add("Ala");
