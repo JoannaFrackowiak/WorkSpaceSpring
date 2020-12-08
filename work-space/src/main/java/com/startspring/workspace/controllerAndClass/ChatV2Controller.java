@@ -1,29 +1,40 @@
 package com.startspring.workspace.controllerAndClass;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/v2/chat")
 public class ChatV2Controller {
 
     private List<ChatMessage> messages = new ArrayList<>();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v2/chat")
-    @ResponseBody
-    public List<ChatMessage> showAllMessages() {
-        return messages;
+    @PostConstruct
+    public void init() {
+        messages.add(new ChatMessage(OffsetDateTime.now(), "Joanna", "tekst"));
+        messages.add(new ChatMessage(OffsetDateTime.now(), "Mariusz", "text2"));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v2/chat")
-    @ResponseBody
-    public List<ChatMessage> theAuthorMessage(@RequestParam String author) {
+//    @GetMapping("")
+//    public List<ChatMessage> showAllMessages() {
+//        return messages;
+//    }
+
+    @GetMapping("")
+    public List<ChatMessage> theAuthorMessage(@RequestParam(required = false) String author,
+                                              @RequestParam(required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) OffsetDateTime dateFrom,
+                                              @RequestParam(required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) OffsetDateTime dateTo) {
         List<ChatMessage> authorMessages = new ArrayList<>();
-        if (author == null) {
-            return authorMessages;
+        if (author == null || author.isEmpty()) {
+            return messages;
         } else {
             for (ChatMessage message : messages) {
                 if (message.getAuthor().equals(author)) {
@@ -34,19 +45,15 @@ public class ChatV2Controller {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/v2/chat")
-    public String addNewMessage(String author, String text) {
-        ChatMessage message = new ChatMessage();
+    @PostMapping("")
+    public ChatMessage addNewMessage(@RequestBody ChatMessage message) {
         message.setDate(OffsetDateTime.now());
-        message.setAuthor(author);
-        message.setText(text);
-        return "you added new message";
+        messages.add(message);
+        return message;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "v2/chat/{id}")
-    public String deleteMessage(@PathVariable int id) {
-        messages.remove(id);
-        return "you deleted message";
+    @DeleteMapping("/{id}")
+    public ChatMessage deleteMessage(@PathVariable int id) {
+        return messages.remove(id);
     }
-
 }
