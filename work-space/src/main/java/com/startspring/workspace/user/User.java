@@ -1,5 +1,7 @@
 package com.startspring.workspace.user;
 
+import java.util.Objects;
+
 public class User {
 
     private int id;
@@ -26,6 +28,24 @@ public class User {
                 ", name: " + name +
                 ", login: " + login +
                 ", birthYear " + birthYear + ".";
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        User user = this;
+        if (user == object) {
+             return true;
+        }
+        if (object == null || user.getClass() != object.getClass()) {
+            return false;
+        }
+        User objectAsAUser = (User) object;
+        return objectAsAUser.login.equals(this.login);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, login, password, birthYear);
     }
 
     public int getId() {
