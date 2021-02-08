@@ -1,7 +1,6 @@
 package com.startspring.workspace.controllerAndClass;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -27,21 +26,17 @@ public class ChatV2Controller {
 //    }
 
     @GetMapping("")
-    public List<ChatMessage> theAuthorMessage(@RequestParam(required = false) String author,
-                                              @RequestParam(required = false)
-                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) OffsetDateTime dateFrom,
-                                              @RequestParam(required = false)
-                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) OffsetDateTime dateTo) {
-        List<ChatMessage> authorMessages = new ArrayList<>();
+    public List<ChatMessage> theAuthorMessage(@RequestParam(required = false) String author) {
+        List<ChatMessage> showMessages = new ArrayList<>();
         if (author == null || author.isEmpty()) {
             return messages;
         } else {
             for (ChatMessage message : messages) {
                 if (message.getAuthor().equals(author)) {
-                    authorMessages.add(message);
+                    showMessages.add(message);
                 }
             }
-            return authorMessages;
+            return showMessages;
         }
     }
 
